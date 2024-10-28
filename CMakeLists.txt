@@ -4,23 +4,16 @@ project(sosal C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set(CMAKE_OSX_ARCHITECTURES "arm64")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include_directories(${CMAKE_SOURCE_DIR}/lib/include)
+add_subdirectory(lib/raylib EXCLUDE_FROM_ALL)
 
 add_executable(${PROJECT_NAME} "src/main.c")
 
-target_link_libraries(${PROJECT_NAME}
-    ${CMAKE_SOURCE_DIR}/lib/bin/libraylib.a
-    "-framework IOKit"
-    "-framework Cocoa"
-    "-framework OpenGL"
-    "-framework CoreVideo"
-    "-framework CoreFoundation"
-)
+target_link_libraries(${PROJECT_NAME} raylib)
 
-# Set include directories for your target specifically
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
-)
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} "-framework IOKit")
+    target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
+    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+endif()
